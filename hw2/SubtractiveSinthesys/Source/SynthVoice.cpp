@@ -45,16 +45,18 @@ void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outpu
     osc.prepare(spec);
     gain.prepare(spec);
 
+    gain.setGainLinear(0.01f);
+
    
 
-    //isPrepared = true;
+    isPrepared = true;
 }
 /*---------------------------------------------------------------*/
 
 
 void SynthVoice::renderNextBlock(juce::AudioBuffer< float >& outputBuffer, int startSample, int numSamples)
 {
-   //jassert (isPrepared); //if isPrepared = false, it stops the audio.
+   jassert (isPrepared); //if isPrepared = false, it stops the audio.
 
     juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };        //alias of the outputBuffer. audioBlock is outputBuffer
     osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));

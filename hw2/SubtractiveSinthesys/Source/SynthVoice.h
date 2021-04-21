@@ -26,13 +26,15 @@ public:
     
 
 private:
+    bool isPrepared{ false }; /*double check that prepareToPlay is called before renderNextBlock*/
+
     juce::ADSR adsr;
     juce::ADSR::Parameters adsrParameters;
 
-    juce::dsp::Oscillator<float> osc { [](float x) { return std::sin (x); }};
+    juce::dsp::Oscillator<float> osc { [](float x) { return x < 0.0f ? -1.0f : 1.0f; }};
     juce::dsp::Gain<float> gain;
     
-    //bool isPrepared{ false };
+    
 
     // return std::sin (x); //Sine Wave
     // return x / MathConstants<float>::pi; // Saw Wave
