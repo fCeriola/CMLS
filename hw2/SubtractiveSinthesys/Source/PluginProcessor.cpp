@@ -22,6 +22,9 @@ SubtractiveSinthesysAudioProcessor::SubtractiveSinthesysAudioProcessor()
                        )
 #endif
 {
+    //according to SynthVoice documentation we don't need to deallocate the memory, it's done by its own.
+    synth.addSound(new SynthSound());
+    synth.addVoice(new SynthVoice());
 }
 
 SubtractiveSinthesysAudioProcessor::~SubtractiveSinthesysAudioProcessor()
@@ -95,6 +98,10 @@ void SubtractiveSinthesysAudioProcessor::prepareToPlay (double sampleRate, int s
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
+
+    /*We use a Synthesizer's method to set the Sample Rate to the current Sample Rate*/
+    synth.setCurrentPlaybackSampleRate(sampleRate);
+
 }
 
 void SubtractiveSinthesysAudioProcessor::releaseResources()
@@ -142,7 +149,7 @@ void SubtractiveSinthesysAudioProcessor::processBlock (juce::AudioBuffer<float>&
     // when they first compile a plugin, but obviously you don't need to keep
     // this code if your algorithm always overwrites all the output channels.
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples());
+        buffer.clear (i, 0, buffer.getNumSamples()); 
 
     // This is the place where you'd normally do the guts of your plugin's
     // audio processing...
@@ -156,6 +163,18 @@ void SubtractiveSinthesysAudioProcessor::processBlock (juce::AudioBuffer<float>&
 
         // ..do something to the data...
     }
+
+    for (int i; i < synth.getNumVoices(); ++i)
+    {
+        if (auto voice = dynamic_cast<juce::SynthesiserVoice*>(synth.getVoice(i)))
+        {
+            //Osc controls
+            //ADSR
+            //LFO ... All this parameters are from the Value Tree 
+        }
+    }
+
+    synth.renderNextBlock (buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
@@ -189,3 +208,5 @@ juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new SubtractiveSinthesysAudioProcessor();
 }
+
+/*-------------Value Tree for ADSR------------------ */ 
