@@ -1,8 +1,6 @@
 /*
   ==============================================================================
-
     This file contains the basic framework code for a JUCE plugin editor.
-
   ==============================================================================
 */
 
@@ -10,31 +8,33 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SubtractiveSinthesysAudioProcessorEditor::SubtractiveSinthesysAudioProcessorEditor (SubtractiveSinthesysAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+TapSynthAudioProcessorEditor::TapSynthAudioProcessorEditor (TapSynthAudioProcessor& p)
+: AudioProcessorEditor (&p)
+, audioProcessor (p)
+, osc (audioProcessor.apvts, "OSC1WAVETYPE")
+, adsr ("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE") 
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (620, 500);
+    addAndMakeVisible (osc);
+    addAndMakeVisible (adsr);
 }
 
-SubtractiveSinthesysAudioProcessorEditor::~SubtractiveSinthesysAudioProcessorEditor()
+TapSynthAudioProcessorEditor::~TapSynthAudioProcessorEditor()
 {
 }
 
 //==============================================================================
-void SubtractiveSinthesysAudioProcessorEditor::paint (juce::Graphics& g)
+void TapSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.fillAll (juce::Colours::black);
 }
 
-void SubtractiveSinthesysAudioProcessorEditor::resized()
+void TapSynthAudioProcessorEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    const auto paddingX = 5;
+    const auto paddingY = 35;
+    const auto paddingY2 = 235;
+    
+    osc.setBounds (paddingX, paddingY, 300, 200);
+    adsr.setBounds (osc.getRight(), paddingY, 300, 200);
 }

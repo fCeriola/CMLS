@@ -1,6 +1,6 @@
 /*
   ==============================================================================
-    SynthSound.h
+    AdsrData.h
   ==============================================================================
 */
 
@@ -8,10 +8,11 @@
 
 #include <JuceHeader.h>
 
-class SynthSound : public juce::SynthesiserSound
+class AdsrData : public juce::ADSR
 {
 public:
-    bool appliesToNote (int midiNoteNumber) override { return true; }
-    bool appliesToChannel (int midiChannel) override { return true; }
+    void update (const float attack, const float decay, const float sustain, const float release);
     
+private:
+    juce::ADSR::Parameters adsrParams;
 };

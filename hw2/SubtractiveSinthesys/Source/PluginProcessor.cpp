@@ -1,8 +1,6 @@
 /*
   ==============================================================================
-
     This file contains the basic framework code for a JUCE plugin processor.
-
   ==============================================================================
 */
 
@@ -10,7 +8,7 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-SubtractiveSinthesysAudioProcessor::SubtractiveSinthesysAudioProcessor()
+TapSynthAudioProcessor::TapSynthAudioProcessor()
 #ifndef JucePlugin_PreferredChannelConfigurations
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
@@ -19,25 +17,25 @@ SubtractiveSinthesysAudioProcessor::SubtractiveSinthesysAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts (*this, nullptr, "Parameters", createParams())
 #endif
 {
-    //according to SynthVoice documentation we don't need to deallocate the memory, it's done by its own.
-    synth.addSound(new SynthSound());
-    synth.addVoice(new SynthVoice());
+    synth.addSound (new SynthSound());
+    synth.addVoice (new SynthVoice());
 }
 
-SubtractiveSinthesysAudioProcessor::~SubtractiveSinthesysAudioProcessor()
+TapSynthAudioProcessor::~TapSynthAudioProcessor()
 {
+    
 }
 
 //==============================================================================
-const juce::String SubtractiveSinthesysAudioProcessor::getName() const
+const juce::String TapSynthAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
 
-bool SubtractiveSinthesysAudioProcessor::acceptsMidi() const
+bool TapSynthAudioProcessor::acceptsMidi() const
 {
    #if JucePlugin_WantsMidiInput
     return true;
@@ -46,7 +44,7 @@ bool SubtractiveSinthesysAudioProcessor::acceptsMidi() const
    #endif
 }
 
-bool SubtractiveSinthesysAudioProcessor::producesMidi() const
+bool TapSynthAudioProcessor::producesMidi() const
 {
    #if JucePlugin_ProducesMidiOutput
     return true;
@@ -55,7 +53,7 @@ bool SubtractiveSinthesysAudioProcessor::producesMidi() const
    #endif
 }
 
-bool SubtractiveSinthesysAudioProcessor::isMidiEffect() const
+bool TapSynthAudioProcessor::isMidiEffect() const
 {
    #if JucePlugin_IsMidiEffect
     return true;
@@ -64,62 +62,57 @@ bool SubtractiveSinthesysAudioProcessor::isMidiEffect() const
    #endif
 }
 
-double SubtractiveSinthesysAudioProcessor::getTailLengthSeconds() const
+double TapSynthAudioProcessor::getTailLengthSeconds() const
 {
     return 0.0;
 }
 
-int SubtractiveSinthesysAudioProcessor::getNumPrograms()
+int TapSynthAudioProcessor::getNumPrograms()
 {
     return 1;   // NB: some hosts don't cope very well if you tell them there are 0 programs,
                 // so this should be at least 1, even if you're not really implementing programs.
 }
 
-int SubtractiveSinthesysAudioProcessor::getCurrentProgram()
+int TapSynthAudioProcessor::getCurrentProgram()
 {
     return 0;
 }
 
-void SubtractiveSinthesysAudioProcessor::setCurrentProgram (int index)
+void TapSynthAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String SubtractiveSinthesysAudioProcessor::getProgramName (int index)
+const juce::String TapSynthAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void SubtractiveSinthesysAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void TapSynthAudioProcessor::changeProgramName (int index, const juce::String& newName)
 {
 }
 
 //==============================================================================
-void SubtractiveSinthesysAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void TapSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need..
-
-    /*We use a Synthesizer's method to set the Sample Rate to the current Sample Rate*/
-    synth.setCurrentPlaybackSampleRate(sampleRate);
-    /*We are calling SynthVoice::prepareToPlay for all the voices, before calling renderNextBlock*/
+    synth.setCurrentPlaybackSampleRate (sampleRate);
+    
     for (int i = 0; i < synth.getNumVoices(); i++)
     {
         if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
         {
-            voice->prepareToPlay(sampleRate, samplesPerBlock, getTotalNumOutputChannels());
+            voice->prepareToPlay (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
     }
-
 }
 
-void SubtractiveSinthesysAudioProcessor::releaseResources()
+void TapSynthAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
 }
 
 #ifndef JucePlugin_PreferredChannelConfigurations
-bool SubtractiveSinthesysAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
+bool TapSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
     juce::ignoreUnused (layouts);
@@ -127,8 +120,6 @@ bool SubtractiveSinthesysAudioProcessor::isBusesLayoutSupported (const BusesLayo
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
      && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
@@ -144,51 +135,61 @@ bool SubtractiveSinthesysAudioProcessor::isBusesLayoutSupported (const BusesLayo
 }
 #endif
 
-void SubtractiveSinthesysAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void TapSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-   
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear (i, 0, buffer.getNumSamples()); 
-
+        buffer.clear (i, 0, buffer.getNumSamples());
     
-
-    for (int i; i < synth.getNumVoices(); ++i)
+    // Update voice
     {
-        if (auto voice = dynamic_cast<juce::SynthesiserVoice*>(synth.getVoice(i)))
+        for (int i = 0; i < synth.getNumVoices(); ++i)
         {
-            //Osc controls
-            //ADSR
-            //LFO ... All this parameters are from the Value Tree 
+            if (auto voice = dynamic_cast<SynthVoice*>(synth.getVoice(i)))
+            {
+                // Osc
+                auto& oscWaveChoice = *apvts.getRawParameterValue ("OSC1WAVETYPE");
+                
+                
+                // Amp Adsr
+                auto& attack = *apvts.getRawParameterValue ("ATTACK");
+                auto& decay = *apvts.getRawParameterValue ("DECAY");
+                auto& sustain = *apvts.getRawParameterValue ("SUSTAIN");
+                auto& release = *apvts.getRawParameterValue ("RELEASE");
+                
+                // Update voice
+                voice->getOscillator().setWaveType (oscWaveChoice);
+                voice->getAdsr().update (attack.load(), decay.load(), sustain.load(), release.load());
+            }
         }
     }
-
+    
     synth.renderNextBlock (buffer, midiMessages, 0, buffer.getNumSamples());
 }
 
 //==============================================================================
-bool SubtractiveSinthesysAudioProcessor::hasEditor() const
+bool TapSynthAudioProcessor::hasEditor() const
 {
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* SubtractiveSinthesysAudioProcessor::createEditor()
+juce::AudioProcessorEditor* TapSynthAudioProcessor::createEditor()
 {
-    return new SubtractiveSinthesysAudioProcessorEditor (*this);
+    return new TapSynthAudioProcessorEditor (*this);
 }
 
 //==============================================================================
-void SubtractiveSinthesysAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void TapSynthAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void SubtractiveSinthesysAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void TapSynthAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
@@ -198,12 +199,21 @@ void SubtractiveSinthesysAudioProcessor::setStateInformation (const void* data, 
 // This creates new instances of the plugin..
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
-    return new SubtractiveSinthesysAudioProcessor();
+    return new TapSynthAudioProcessor();
 }
 
-/*-------------Value Tree for ADSR------------------ */ 
-
-/*juce::AudioProcessorValueTreeState::ParameterLayout SubtractiveSinthesysAudioProcessor::createParams() 
+juce::AudioProcessorValueTreeState::ParameterLayout TapSynthAudioProcessor::createParams()
 {
-
-}*/
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> params;
+    
+    // OSC select
+    params.push_back (std::make_unique<juce::AudioParameterChoice>("OSC1WAVETYPE", "Osc 1 Wave Type", juce::StringArray { "Sine", "Saw", "Square" }, 0));
+    
+    // ADSR
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("ATTACK", "Attack", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> { 0.1f, 3.0f, 0.1f }, 0.4f));
+ 
+    return { params.begin(), params.end() };
+}

@@ -1,27 +1,25 @@
 /*
   ==============================================================================
-
     This file contains the basic framework code for a JUCE plugin processor.
-
   ==============================================================================
 */
 
 #pragma once
 
 #include <JuceHeader.h>
-#include "SynthSound.h"
 #include "SynthVoice.h"
-
+#include "SynthSound.h"
+#include "AdsrData.h"
 
 //==============================================================================
 /**
 */
-class SubtractiveSinthesysAudioProcessor  : public juce::AudioProcessor
+class TapSynthAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    SubtractiveSinthesysAudioProcessor();
-    ~SubtractiveSinthesysAudioProcessor() override;
+    TapSynthAudioProcessor();
+    ~TapSynthAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -55,10 +53,13 @@ public:
     //==============================================================================
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
+    
+    juce::AudioProcessorValueTreeState apvts;
 
 private:
-
-    juce::Synthesiser synth;
+    juce::Synthesiser synth;    
+    juce::AudioProcessorValueTreeState::ParameterLayout createParams();
+    
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSinthesysAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapSynthAudioProcessor)
 };

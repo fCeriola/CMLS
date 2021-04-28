@@ -1,8 +1,6 @@
 /*
   ==============================================================================
-
     This file contains the basic framework code for a JUCE plugin editor.
-
   ==============================================================================
 */
 
@@ -10,24 +8,26 @@
 
 #include <JuceHeader.h>
 #include "PluginProcessor.h"
+#include "AdsrComponent.h"
+#include "OscComponent.h"
 
 //==============================================================================
 /**
 */
-class SubtractiveSinthesysAudioProcessorEditor  : public juce::AudioProcessorEditor
+class TapSynthAudioProcessorEditor  : public juce::AudioProcessorEditor
 {
 public:
-    SubtractiveSinthesysAudioProcessorEditor (SubtractiveSinthesysAudioProcessor&);
-    ~SubtractiveSinthesysAudioProcessorEditor() override;
+    TapSynthAudioProcessorEditor (TapSynthAudioProcessor&);
+    ~TapSynthAudioProcessorEditor() override;
 
     //==============================================================================
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    SubtractiveSinthesysAudioProcessor& audioProcessor;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSinthesysAudioProcessorEditor)
+    TapSynthAudioProcessor& audioProcessor;
+    OscComponent osc;
+    AdsrComponent adsr;
+ 
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapSynthAudioProcessorEditor)
 };

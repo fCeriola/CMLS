@@ -1,73 +1,78 @@
 /*
   ==============================================================================
-
     SynthVoice.cpp
-    Created: 20 Apr 2021 4:24:21pm
-    Author:  Gimbo
-
   ==============================================================================
 */
 
 #include "SynthVoice.h"
 
-bool SynthVoice::canPlaySound(juce::SynthesiserSound* sound)
+
+bool SynthVoice::canPlaySound (juce::SynthesiserSound* sound)
 {
-    return dynamic_cast<juce::SynthesiserSound*>(sound) != nullptr; //Checking if Sound is not pointing at a null pointer.
+    return dynamic_cast<juce::SynthesiserSound*>(sound) != nullptr;
 }
 
-void SynthVoice::startNote(int midiNoteNumber, float velocity, juce::SynthesiserSound* sound, int currentPitchWheelPosition)
+void SynthVoice::startNote (int midiNoteNumber, float velocity, juce::SynthesiserSound *sound, int currentPithcWheelPosition)
 {
-    osc.setFrequency(juce::MidiMessage::getMidiNoteInHertz(midiNoteNumber));
+    osc.setWaveFrequency (midiNoteNumber);
     adsr.noteOn();
 }
 
-void SynthVoice::stopNote(float velocity, bool allowTailOff)
+void SynthVoice::stopNote (float velocity, bool allowTailOff)
 {
     adsr.noteOff();
+    
+    if (! allowTailOff || ! adsr.isActive())
+        clearCurrentNote();
 }
 
-void SynthVoice::controllerMoved(int controllerNumber, int newControllerValue)
+void SynthVoice::pitchWheelMoved (int newPitchWheelValue)
 {
 
 }
 
+void SynthVoice::controllerMoved (int controllerNumber, int newControllerValue)
+{
+    
+}
 
-/*--------------OSCILLATOR SPEC BEFORE PLAYING-------------------*/
-void SynthVoice::prepareToPlay(double sampleRate, int samplesPerBlock, int outputChannels) {
 
-    adsr.setSampleRate(sampleRate);
-
+void SynthVoice::prepareToPlay (double sampleRate, int samplesPerBlock, int outputChannels)
+{
     juce::dsp::ProcessSpec spec;
     spec.maximumBlockSize = samplesPerBlock;
     spec.sampleRate = sampleRate;
     spec.numChannels = outputChannels;
-
-    osc.prepare(spec);
-    gain.prepare(spec);
-
-    gain.setGainLinear(0.01f);
-
-   
-
+    
+    osc.prepareToPlay (spec);
+    adsr.setSampleRate (sampleRate);
+    gain.prepare (spec);
+    
+    gain.setGainLinear (0.3f);
+    
     isPrepared = true;
 }
-/*---------------------------------------------------------------*/
 
-
-void SynthVoice::renderNextBlock(juce::AudioBuffer< float >& outputBuffer, int startSample, int numSamples)
+void SynthVoice::renderNextBlock (juce::AudioBuffer< float > &outputBuffer, int startSample, int numSamples)
 {
-   jassert (isPrepared); //if isPrepared = false, it stops the audio.
-
-    juce::dsp::AudioBlock<float> audioBlock{ outputBuffer };        //alias of the outputBuffer. audioBlock is outputBuffer
-    osc.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
-    gain.process(juce::dsp::ProcessContextReplacing<float>(audioBlock));
+    jassert (isPrepared);
     
-    adsr.applyEnvelopeToBuffer(outputBuffer, startSample, numSamples); //ouputBuffer will contain all the audio data of osc.process
-
+    if (! isVoiceActive())
+        return;
     
-}
-
-void SynthVoice::pitchWheelMoved(int newPitchWheelValue)
-{
-
+    synthBuffer.setSize (outputBuffer.getNumChannels(), numSamples, false, false, true);
+    synthBuffer.clear();
+        
+    juce::dsp::AudioBlock<float> audioBlock { synthBuffer };
+    osc.getNextAudioBlock (audioBlock);
+    adsr.applyEnvelopeToBuffer (synthBuffer, 0, synthBuffer.getNumSamples());
+    gain.process (juce::dsp::ProcessContextReplacing<float> (audioBlock));
+    
+    for (int channel = 0; channel < outputBuffer.getNumChannels(); ++channel)
+    {
+        outputBuffer.addFrom (channel, startSample, synthBuffer, channel, 0, numSamples);
+        
+        if (! adsr.isActive())
+            clearCurrentNote();
+    }
 }
