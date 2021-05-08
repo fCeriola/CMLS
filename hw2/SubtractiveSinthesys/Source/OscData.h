@@ -17,8 +17,5 @@ public:
     void getNextAudioBlock (juce::dsp::AudioBlock<float>& block);
     
 private:
-    void processFmOsc (juce::dsp::AudioBlock<float>& block);
-    
-    juce::dsp::Oscillator<float> fmOsc { [](float x) { return std::sin (x); } };
     int lastMidiNote { 0 };
 };

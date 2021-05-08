@@ -13,10 +13,12 @@ TapSynthAudioProcessorEditor::TapSynthAudioProcessorEditor (TapSynthAudioProcess
 , audioProcessor (p)
 , osc (audioProcessor.apvts, "OSC1WAVETYPE")
 , adsr ("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE") 
+, filter ("Filter", audioProcessor.apvts, "CUTOFF", "RESONANCE")
 {
     setSize (620, 500);
     addAndMakeVisible (osc);
     addAndMakeVisible (adsr);
+    addAndMakeVisible (filter);
 }
 
 TapSynthAudioProcessorEditor::~TapSynthAudioProcessorEditor()
@@ -37,4 +39,5 @@ void TapSynthAudioProcessorEditor::resized()
     
     osc.setBounds (paddingX, paddingY, 300, 200);
     adsr.setBounds (osc.getRight(), paddingY, 300, 200);
+    filter.setBounds (paddingX, paddingY2, 300, 200);
 }

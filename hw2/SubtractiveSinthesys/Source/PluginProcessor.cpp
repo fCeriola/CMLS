@@ -17,11 +17,18 @@ TapSynthAudioProcessor::TapSynthAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), apvts (*this, nullptr, "Parameters", createParams())
+                       ), apvts (*this, nullptr, "Parameters", createParams()), 
+                       lowPassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000.0f, 0.1))
 #endif
 {
     synth.addSound (new SynthSound());
     synth.addVoice (new SynthVoice());
+
+    juce::NormalisableRange<float> cutoffRange (20.0f, 20000.0f);
+    juce::NormalisableRange<float> resRange (0.1f, 1.0f);
+    
+    apvts.createAndAddParameter("cutoff", "Cutoff", "cutoff", cutoffRange, 100.0f, nullptr, nullptr);
+    apvts.createAndAddParameter("resonance", "Resonance", "resonance", resRange, 0.1f, nullptr, nullptr);
 }
 
 TapSynthAudioProcessor::~TapSynthAudioProcessor()
@@ -103,6 +110,10 @@ void TapSynthAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlo
             voice->prepareToPlay (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
     }
+    juce::dsp::ProcessSpec spec;
+    
+    lowPassFilter.prepare(spec);
+    lowPassFilter.reset();
 }
 
 void TapSynthAudioProcessor::releaseResources()
@@ -135,6 +146,14 @@ bool TapSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts)
 }
 #endif
 
+void TapSynthAudioProcessor::updateFilter()
+{
+    float freq = *apvts.getRawParameterValue("cutoff");
+    float res = *apvts.getRawParameterValue("resonance");
+    
+    *lowPassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, freq, res);
+}
+
 void TapSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -159,10 +178,14 @@ void TapSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
                 auto& decay = *apvts.getRawParameterValue ("DECAY");
                 auto& sustain = *apvts.getRawParameterValue ("SUSTAIN");
                 auto& release = *apvts.getRawParameterValue ("RELEASE");
-                
+                           
                 // Update voice
                 voice->getOscillator().setWaveType (oscWaveChoice);
                 voice->getAdsr().update (attack.load(), decay.load(), sustain.load(), release.load());
+                
+                juce::dsp::AudioBlock <float> block (buffer);
+                updateFilter();
+                lowPassFilter.process(juce::dsp::ProcessContextReplacing<float> (block));
             }
         }
     }
@@ -214,6 +237,6 @@ juce::AudioProcessorValueTreeState::ParameterLayout TapSynthAudioProcessor::crea
     params.push_back (std::make_unique<juce::AudioParameterFloat>("DECAY", "Decay", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 1.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> { 0.1f, 3.0f, 0.1f }, 0.4f));
- 
+    
     return { params.begin(), params.end() };
 }

@@ -21,9 +21,11 @@ public:
     void pitchWheelMoved (int newPitchWheelValue) override;
     void prepareToPlay (double sampleRate, int samplesPerBlock, int outputChannels);
     void renderNextBlock (juce::AudioBuffer< float > &outputBuffer, int startSample, int numSamples) override;
-      
+
     OscData& getOscillator() { return osc; }
     AdsrData& getAdsr() { return adsr; }
+    
+    
 
 private:
     juce::AudioBuffer<float> synthBuffer;
@@ -33,4 +35,5 @@ private:
     juce::dsp::Gain<float> gain;
     
     bool isPrepared { false };
+    
 };

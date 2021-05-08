@@ -36,7 +36,6 @@ void SynthVoice::controllerMoved (int controllerNumber, int newControllerValue)
     
 }
 
-
 void SynthVoice::prepareToPlay (double sampleRate, int samplesPerBlock, int outputChannels)
 {
     juce::dsp::ProcessSpec spec;

@@ -1,30 +1,38 @@
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="HRmfhF" name="SubtractiveSinthesys" projectType="audioplug"
               useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
-              jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
+              jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginProducesMidiOut,pluginWantsMidiIn"
+              pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="QeLCpC" name="SubtractiveSinthesys">
-    <GROUP id="{24251074-7A07-B91D-3641-419974620572}" name="Source">
-      <FILE id="SaXNb1" name="AdsrComponent.cpp" compile="1" resource="0"
+    <GROUP id="{93506ECB-63AC-49E7-B163-196B84CB4929}" name="UI">
+      <FILE id="OPCniC" name="AdsrComponent.cpp" compile="1" resource="0"
             file="Source/AdsrComponent.cpp"/>
-      <FILE id="KqmauK" name="AdsrComponent.h" compile="0" resource="0" file="Source/AdsrComponent.h"/>
-      <FILE id="lGO2Rc" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
-      <FILE id="HmaQOV" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
-      <FILE id="FfzHuy" name="OscComponent.cpp" compile="1" resource="0"
+      <FILE id="TQ05ln" name="AdsrComponent.h" compile="0" resource="0" file="Source/AdsrComponent.h"/>
+      <FILE id="gkNELF" name="OscComponent.cpp" compile="1" resource="0"
             file="Source/OscComponent.cpp"/>
-      <FILE id="n0JLYP" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
-      <FILE id="wKUKX8" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
-      <FILE id="RDPDfn" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
-      <FILE id="j9Empy" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="fKSeNZ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="yIr3AB" name="PluginProcessor.cpp" compile="1" resource="0"
+      <FILE id="j3BGbc" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
+    </GROUP>
+    <GROUP id="{AC7E560B-3F61-1247-1FFA-F3E632269A8D}" name="Data">
+      <FILE id="jrRN1v" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
+      <FILE id="dW1TzJ" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
+      <FILE id="l1bjWy" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
+      <FILE id="edWFZe" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
+    </GROUP>
+    <GROUP id="{24251074-7A07-B91D-3641-419974620572}" name="Source">
+      <FILE id="lBAP0a" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="bHcgJ0" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="VyhNpK" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <FILE id="Z0ZZY8" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>
-      <FILE id="KxJghg" name="PluginProcessor.h" compile="0" resource="0"
+      <FILE id="vta8jw" name="PluginProcessor.h" compile="0" resource="0"
             file="Source/PluginProcessor.h"/>
-      <FILE id="rPmWDF" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
-      <FILE id="JxowpU" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
-      <FILE id="r5bj6V" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <FILE id="FoYcwm" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="ya4xpN" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
@@ -71,3 +79,118 @@
     <WINDOWS/>
   </LIVE_SETTINGS>
 </JUCERPROJECT>
+=======
+>>>>>>> Stashed changes
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="HRmfhF" name="SubtractiveSinthesys" projectType="audioplug"
+              useAppConfig="0" addUsingNamespaceToJuceHeader="0" displaySplashScreen="1"
+              jucerFormatVersion="1" pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn">
+  <MAINGROUP id="QeLCpC" name="SubtractiveSinthesys">
+    <GROUP id="{24251074-7A07-B91D-3641-419974620572}" name="Source">
+<<<<<<< Updated upstream
+      <FILE id="SaXNb1" name="AdsrComponent.cpp" compile="1" resource="0"
+            file="Source/AdsrComponent.cpp"/>
+      <FILE id="KqmauK" name="AdsrComponent.h" compile="0" resource="0" file="Source/AdsrComponent.h"/>
+      <FILE id="lGO2Rc" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
+      <FILE id="HmaQOV" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
+      <FILE id="FfzHuy" name="OscComponent.cpp" compile="1" resource="0"
+            file="Source/OscComponent.cpp"/>
+      <FILE id="n0JLYP" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
+      <FILE id="wKUKX8" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
+      <FILE id="RDPDfn" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
+      <FILE id="j9Empy" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="fKSeNZ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="yIr3AB" name="PluginProcessor.cpp" compile="1" resource="0"
+=======
+<<<<<<< Updated upstream
+      <FILE id="lBAP0a" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="bHcgJ0" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="VyhNpK" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+      <FILE id="Z0ZZY8" name="PluginProcessor.cpp" compile="1" resource="0"
+>>>>>>> Stashed changes
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="KxJghg" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+<<<<<<< Updated upstream
+      <FILE id="rPmWDF" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="JxowpU" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="r5bj6V" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+=======
+      <FILE id="FoYcwm" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="ya4xpN" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+=======
+      <FILE id="SaXNb1" name="AdsrComponent.cpp" compile="1" resource="0"
+            file="Source/AdsrComponent.cpp"/>
+      <FILE id="KqmauK" name="AdsrComponent.h" compile="0" resource="0" file="Source/AdsrComponent.h"/>
+      <FILE id="lGO2Rc" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
+      <FILE id="HmaQOV" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
+      <FILE id="FfzHuy" name="OscComponent.cpp" compile="1" resource="0"
+            file="Source/OscComponent.cpp"/>
+      <FILE id="n0JLYP" name="OscComponent.h" compile="0" resource="0" file="Source/OscComponent.h"/>
+      <FILE id="wKUKX8" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
+      <FILE id="RDPDfn" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
+      <FILE id="j9Empy" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/PluginEditor.cpp"/>
+      <FILE id="fKSeNZ" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
+      <FILE id="yIr3AB" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/PluginProcessor.cpp"/>
+      <FILE id="KxJghg" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/PluginProcessor.h"/>
+      <FILE id="rPmWDF" name="SynthSound.h" compile="0" resource="0" file="Source/SynthSound.h"/>
+      <FILE id="JxowpU" name="SynthVoice.cpp" compile="1" resource="0" file="Source/SynthVoice.cpp"/>
+      <FILE id="r5bj6V" name="SynthVoice.h" compile="0" resource="0" file="Source/SynthVoice.h"/>
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+    </GROUP>
+  </MAINGROUP>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1" JUCE_VST3_CAN_REPLACE_VST2="0"/>
+  <EXPORTFORMATS>
+    <VS2019 targetFolder="Builds/VisualStudio2019">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SubtractiveSinthesys"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="SubtractiveSinthesys"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_audio_basics" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_core" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../../../../../../../JUCE/modules"/>
+        <MODULEPATH id="juce_dsp" path="../../../../../../../JUCE/modules"/>
+      </MODULEPATHS>
+    </VS2019>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_dsp" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+</JUCERPROJECT>
+<<<<<<< Updated upstream
+=======
+>>>>>>> Hw2
+>>>>>>> Stashed changes
