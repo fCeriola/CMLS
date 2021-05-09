@@ -26,8 +26,8 @@ SubtractiveSynthAudioProcessor::SubtractiveSynthAudioProcessor()
     synth.addSound (new SynthSound());
     synth.addVoice (new SynthVoice());
 
-    juce::NormalisableRange<float> cutoffRange (20.0f, 20000.0f);
-    juce::NormalisableRange<float> resRange (0.1f, 1.0f);
+//    juce::NormalisableRange<float> cutoffRange (20.0f, 20000.0f);
+//    juce::NormalisableRange<float> resRange (0.1f, 1.0f);
     
 //    apvts.createAndAddParameter("cutoff", "Cutoff", "cutoff", cutoffRange, 100.0f, nullptr, nullptr);
 //    apvts.createAndAddParameter("resonance", "Resonance", "resonance", resRange, 0.1f, nullptr, nullptr);

@@ -12,30 +12,12 @@
 #include "FilterComponent.h"
 
 //==============================================================================
-FilterComponent::FilterComponent()
+FilterComponent::FilterComponent (juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String cutoffId, juce::String resId)
 {
-    // In your constructor, you should add any child components, and
-    // initialise any special settings that your component needs.
-    setSize (200, 200);
+    componentName = name;
     
-    filterCutoffDial.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    filterCutoffDial.setRange(20.0f, 20000.0f);
-    filterCutoffDial.setValue(600.0f);
-    filterCutoffDial.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-    filterCutoffDial.setPopupDisplayEnabled(true, true, this);
-    addAndMakeVisible(&filterCutoffDial);
-    
-    filterResDial.setSliderStyle(juce::Slider::SliderStyle::RotaryVerticalDrag);
-    filterResDial.setRange(0.1f, 1.0f);
-    filterResDial.setValue(2.0f);
-    filterResDial.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
-    filterResDial.setPopupDisplayEnabled(true, true, this);
-    addAndMakeVisible(&filterResDial);
-    
-    filterCutoffValue = new juce::AudioProcessorValueTreeState::SliderAttachment (audioProcessor.apvts, "cutoff", filterCutoffDial);
-    filterResValue = new juce::AudioProcessorValueTreeState::SliderAttachment (audioProcessor.apvts, "resonance", filterResDial);
-    filterCutoffDial.setSkewFactorFromMidPoint(1000.0f);
-
+    setSliderWithLabel (filterCutoffSlider, cutoffLabel, apvts, cutoffId, filterCutoffAttachment);
+    setSliderWithLabel (filterResSlider, resLabel, apvts, resId, filterResAttachment);
 }
 
 FilterComponent::~FilterComponent()
@@ -44,13 +26,6 @@ FilterComponent::~FilterComponent()
 
 void FilterComponent::paint (juce::Graphics& g)
 {
-    /* This demo code just fills the component's background and
-       draws some placeholder text to get you started.
-
-       You should replace everything in this method with your own
-       drawing code..
-    */
- 
     juce::Rectangle<int> titleArea (0, 10, getWidth(), 20);
     
     g.fillAll (juce::Colours::black);
@@ -67,10 +42,24 @@ void FilterComponent::paint (juce::Graphics& g)
 
 void FilterComponent::resized()
 {
-    // This method is where you should set the bounds of any child
-    // components that your component contains..
     juce::Rectangle<int> area = getLocalBounds().reduced(40);
     
-    filterCutoffDial.setBounds (30, 90, 70, 70);
-    filterResDial.setBounds (100, 90, 70, 70);
+    filterCutoffSlider.setBounds (30, 90, 70, 70);
+    filterResSlider.setBounds (100, 90, 70, 70);
+}
+
+using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+void FilterComponent::setSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment)
+{
+    slider.setSliderStyle (juce::Slider::SliderStyle::LinearVertical);
+    slider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 50, 25);
+    addAndMakeVisible (slider);
+    
+    attachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(apvts, paramId, slider);
+    
+    label.setColour (juce::Label::ColourIds::textColourId, juce::Colours::white);
+    label.setFont (15.0f);
+    label.setJustificationType (juce::Justification::centred);
+    addAndMakeVisible (label);
 }
