@@ -14,18 +14,18 @@
 //==============================================================================
 /**
 */
-class TapSynthAudioProcessor  : public juce::AudioProcessor
+class SubtractiveSynthAudioProcessor  : public juce::AudioProcessor
 {
 public:
     //==============================================================================
-    TapSynthAudioProcessor();
-    ~TapSynthAudioProcessor() override;
+    SubtractiveSynthAudioProcessor();
+    ~SubtractiveSynthAudioProcessor() override;
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
     
-   // void TapSynthAudioProcessor::updateFilter();
+   // void SubtractiveSynthAudioProcessor::updateFilter();
 
    #ifndef JucePlugin_PreferredChannelConfigurations
     bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
@@ -67,5 +67,5 @@ private:
     float lastSampleRate;
     
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (TapSynthAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSynthAudioProcessor)
 };
