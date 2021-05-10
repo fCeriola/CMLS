@@ -26,26 +26,32 @@ FilterComponent::~FilterComponent()
 
 void FilterComponent::paint (juce::Graphics& g)
 {
-    juce::Rectangle<int> titleArea (0, 10, getWidth(), 20);
+    auto bounds = getLocalBounds().reduced (5);
+    auto labelSpace = bounds.removeFromTop (25.0f);
     
     g.fillAll (juce::Colours::black);
-    g.setColour(juce::Colours::white);
-    g.drawText("Filter", titleArea, juce::Justification::centredTop);
-    g.drawText("Cutoff", 46, 70, 50, 25, juce::Justification::centredLeft);
-    g.drawText("Resonance", 107, 70, 70, 25, juce::Justification::centredLeft);
-    
-    juce::Rectangle <float> area (25, 25, 150, 150);
-    
-    g.setColour(juce::Colours::yellow);
-    g.drawRoundedRectangle(area, 20.0f, 2.0f);
+    g.setColour (juce::Colours::white);
+    g.setFont (20.0f);
+    g.drawText (componentName, labelSpace.withX (5), juce::Justification::left);
+    g.drawRoundedRectangle (bounds.toFloat(), 5.0f, 2.0f);
 }
 
 void FilterComponent::resized()
-{
-    juce::Rectangle<int> area = getLocalBounds().reduced(40);
+{const auto bounds = getLocalBounds().reduced (10);
+    const auto padding = 10;
+    const auto sliderWidth = bounds.getWidth() / 4 - padding;
+    const auto sliderHeight = bounds.getHeight() - 45;
+    const auto sliderStartX = padding + 5;
+    const auto sliderStartY = 55;
+    const auto labelYOffset = 20;
+    const auto labelHeight = 20;
+    const auto labelStart = sliderStartY - labelYOffset;
     
-    filterCutoffSlider.setBounds (30, 90, 70, 70);
-    filterResSlider.setBounds (100, 90, 70, 70);
+    filterCutoffSlider.setBounds (sliderStartX, sliderStartY, sliderWidth, sliderHeight);
+    cutoffLabel.setBounds (filterCutoffSlider.getX(), labelStart, sliderWidth, labelHeight);
+    
+    filterResSlider.setBounds (filterCutoffSlider.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
+    resLabel.setBounds (filterResSlider.getX(), labelStart, sliderWidth, labelHeight);
 }
 
 using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
