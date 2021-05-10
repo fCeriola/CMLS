@@ -111,11 +111,19 @@ void SubtractiveSynthAudioProcessor::prepareToPlay (double sampleRate, int sampl
         {
             voice->prepareToPlay (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
-    }
-    juce::dsp::ProcessSpec spec;
+        
+        juce::dsp::ProcessSpec spec;
+        //spec.maximumBlockSize = samplesPerBlock;
+        lastSampleRate = sampleRate;
+        spec.sampleRate = lastSampleRate;
+        //spec.numChannels = outputChannels;
+        
+        //juce::dsp::ProcessSpec spec;
     
-    lowPassFilter.prepare(spec);
-    lowPassFilter.reset();
+        lowPassFilter.prepare(spec);
+        lowPassFilter.reset();
+    }
+    
 }
 
 void SubtractiveSynthAudioProcessor::releaseResources()
