@@ -18,29 +18,31 @@
 class FilterComponent : public juce::Component
 {
 public:
-    FilterComponent (juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String cutoffId, juce::String resId);
+    FilterComponent (juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String cutoffId, juce::String resId);
     ~FilterComponent() override;
 
     void paint (juce::Graphics&) override;
     void resized() override;
 
 private:
-    using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
-    
-    void setSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment);
+    juce::ComboBox filterTypeSelector { "Filter Type" };
+    std::unique_ptr<juce::AudioProcessorValueTreeState::ComboBoxAttachment> filterTypeSelectorAttachment;
     
     juce::Slider filterCutoffSlider;
     juce::Slider filterResSlider;
     
-    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+    using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
     
-    std::unique_ptr<SliderAttachment> filterCutoffAttachment;
-    std::unique_ptr<SliderAttachment> filterResAttachment;
+    std::unique_ptr<Attachment> filterFreqAttachment;
+    std::unique_ptr<Attachment> filterResAttachment;
     
-    juce::Label cutoffLabel { "Cutoff", "cutoff" };
-    juce::Label resLabel { "Resonance", "resonance" };
+    juce::Label filterSelectorLabel { "Filter Type", "Filter Type" };
+    juce::Label cutoffLabel { "Filter Freq", "Filter Freq" };
+    juce::Label resLabel { "Filter Res", "FilterRes" };
     
-    juce::String componentName {""};
-    
+    void setSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment);
+
+    juce::String componentName{ "" };
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (FilterComponent)
 };

@@ -12,11 +12,21 @@
 #include "FilterComponent.h"
 
 //==============================================================================
-FilterComponent::FilterComponent (juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String cutoffId, juce::String resId)
+FilterComponent::FilterComponent (juce::String name, juce::AudioProcessorValueTreeState& apvts, juce::String filterTypeSelectorId, juce::String cutoffId, juce::String resId)
 {
     componentName = name;
+    juce::StringArray choices { "Low-Pass", "Band-Pass", "High-Pass" };
+    filterTypeSelector.addItemList (choices, 1);
+    addAndMakeVisible (filterTypeSelector);
     
-    setSliderWithLabel (filterCutoffSlider, cutoffLabel, apvts, cutoffId, filterCutoffAttachment);
+    filterTypeSelectorAttachment = std::make_unique<juce::AudioProcessorValueTreeState::ComboBoxAttachment>(apvts, filterTypeSelectorId, filterTypeSelector);
+    
+    filterSelectorLabel.setColour (juce::Label::ColourIds::textColourId, juce::Colours::white);
+    filterSelectorLabel.setFont (15.0f);
+    filterSelectorLabel.setJustificationType (juce::Justification::left);
+    addAndMakeVisible (filterSelectorLabel);
+    
+    setSliderWithLabel (filterCutoffSlider, cutoffLabel, apvts, cutoffId, filterFreqAttachment);
     setSliderWithLabel (filterResSlider, resLabel, apvts, resId, filterResAttachment);
 }
 
@@ -32,12 +42,12 @@ void FilterComponent::paint (juce::Graphics& g)
     g.fillAll (juce::Colours::black);
     g.setColour (juce::Colours::white);
     g.setFont (20.0f);
-    g.drawText (componentName, labelSpace.withX (5), juce::Justification::left);
+    g.drawText(componentName, labelSpace.withX(5), juce::Justification::left);
     g.drawRoundedRectangle (bounds.toFloat(), 5.0f, 2.0f);
 }
 
 void FilterComponent::resized()
-{const auto bounds = getLocalBounds().reduced (10);
+{   const auto bounds = getLocalBounds().reduced (10);
     const auto padding = 10;
     const auto sliderWidth = bounds.getWidth() / 4 - padding;
     const auto sliderHeight = bounds.getHeight() - 45;
@@ -47,7 +57,10 @@ void FilterComponent::resized()
     const auto labelHeight = 20;
     const auto labelStart = sliderStartY - labelYOffset;
     
-    filterCutoffSlider.setBounds (sliderStartX, sliderStartY, sliderWidth, sliderHeight);
+    filterTypeSelector.setBounds (sliderStartX, sliderStartY, 90, 30);
+    filterSelectorLabel.setBounds (padding, sliderStartY - labelYOffset, 90, labelHeight);
+    
+    filterCutoffSlider.setBounds (filterTypeSelector.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
     cutoffLabel.setBounds (filterCutoffSlider.getX(), labelStart, sliderWidth, labelHeight);
     
     filterResSlider.setBounds (filterCutoffSlider.getRight() + padding, sliderStartY, sliderWidth, sliderHeight);
@@ -58,7 +71,7 @@ using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
 void FilterComponent::setSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment)
 {
-    slider.setSliderStyle (juce::Slider::SliderStyle::LinearVertical);
+    slider.setSliderStyle (juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag);
     slider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 50, 25);
     addAndMakeVisible (slider);
     

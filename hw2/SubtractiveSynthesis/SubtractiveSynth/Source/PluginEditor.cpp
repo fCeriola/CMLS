@@ -13,12 +13,12 @@ SubtractiveSynthAudioProcessorEditor::SubtractiveSynthAudioProcessorEditor (Subt
 , audioProcessor (p)
 , osc (audioProcessor.apvts, "OSC1WAVETYPE")
 , adsr ("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE") 
-, filt ("Filter Control", audioProcessor.apvts, "CUTOFF", "RESONANCE")
+, filter ("Filter", audioProcessor.apvts, "FILTERTYPE", "FILTERFREQ", "FILTERRES")
 {
     setSize (620, 500);
     addAndMakeVisible (osc);
     addAndMakeVisible (adsr);
-    addAndMakeVisible (filt);
+    addAndMakeVisible (filter);
 }
 
 SubtractiveSynthAudioProcessorEditor::~SubtractiveSynthAudioProcessorEditor()
@@ -39,5 +39,5 @@ void SubtractiveSynthAudioProcessorEditor::resized()
     
     osc.setBounds (paddingX, paddingY, 300, 200);
     adsr.setBounds (osc.getRight(), paddingY, 300, 200);
-    filt.setBounds (paddingX, paddingY2, 300, 200);
+    filter.setBounds (paddingX, paddingY2, 300, 200);
 }

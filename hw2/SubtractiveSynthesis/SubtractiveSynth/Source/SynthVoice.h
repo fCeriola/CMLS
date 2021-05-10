@@ -10,7 +10,7 @@
 #include "SynthSound.h"
 #include "OscData.h"
 #include "AdsrData.h"
-#include "FIlterData.h"
+#include "FilterData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -23,10 +23,11 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock, int outputChannels);
     void renderNextBlock (juce::AudioBuffer< float > &outputBuffer, int startSample, int numSamples) override;
 
+    void updateFilter (const int filterType, const float frequency, const float resonance);
+    
     OscData& getOscillator() { return osc; }
     AdsrData& getAdsr() { return adsr; }
-    FilterData& getFilter() { return filter;  }
-    
+    FilterData& getFilter() { return filter; }
 
 private:
     juce::AudioBuffer<float> synthBuffer;

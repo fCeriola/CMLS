@@ -29,7 +29,7 @@ private:
     SubtractiveSynthAudioProcessor& audioProcessor;
     OscComponent osc;
     AdsrComponent adsr;
-    FilterComponent filt;
+    FilterComponent filter;
  
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSynthAudioProcessorEditor)
 };

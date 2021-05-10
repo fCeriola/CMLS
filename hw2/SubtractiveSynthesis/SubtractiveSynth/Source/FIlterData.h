@@ -12,13 +12,15 @@
 
 #include <JuceHeader.h>
 
-class FilterData : public juce::dsp::IIR::Filter<float>
+class FilterData
 {
-public: 
-    void update (const float sampleRate, const float cutoff, const float res);
+public:
+    void prepareToPlay(double sampleRate, int samplesPerBlock, int numChannels);
+    void process(juce::AudioBuffer<float>& buffer);
+    void updateParameters(const int filterType, const float frequency, const float resonance);
+    void reset();
 
 private:
-    juce::dsp::IIR::Coefficients<float> coeffs;
-    //juce::dsp::ProcessorDuplicator <juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients <float>> lowPassFilter;
-    //lowPassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000.0f, 0.1));
+    juce::dsp::StateVariableTPTFilter<float> filter;
+    bool isPrepared{ false };
 };

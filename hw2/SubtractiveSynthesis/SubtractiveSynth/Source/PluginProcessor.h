@@ -63,7 +63,6 @@ public:
 private:
     juce::Synthesiser synth;    
     juce::AudioProcessorValueTreeState::ParameterLayout createParams();
-    //juce::dsp::ProcessorDuplicator <juce::dsp::IIR::Filter<float>, juce::dsp::IIR::Coefficients <float>> lowPassFilter;
     float lastSampleRate;
     
     //==============================================================================

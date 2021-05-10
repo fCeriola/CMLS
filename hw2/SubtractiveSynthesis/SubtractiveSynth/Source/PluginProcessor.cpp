@@ -20,17 +20,10 @@ SubtractiveSynthAudioProcessor::SubtractiveSynthAudioProcessor()
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
                        ), apvts (*this, nullptr, "Parameters", createParams()) 
-                       //lowPassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000.0f, 0.1))
 #endif
 {
     synth.addSound (new SynthSound());
     synth.addVoice (new SynthVoice());
-
-//    juce::NormalisableRange<float> cutoffRange (20.0f, 20000.0f);
-//    juce::NormalisableRange<float> resRange (0.1f, 1.0f);
-    
-//    apvts.createAndAddParameter("cutoff", "Cutoff", "cutoff", cutoffRange, 100.0f, nullptr, nullptr);
-//    apvts.createAndAddParameter("resonance", "Resonance", "resonance", resRange, 0.1f, nullptr, nullptr);
 }
 
 SubtractiveSynthAudioProcessor::~SubtractiveSynthAudioProcessor()
@@ -111,17 +104,6 @@ void SubtractiveSynthAudioProcessor::prepareToPlay (double sampleRate, int sampl
         {
             voice->prepareToPlay (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
-        
-        //juce::dsp::ProcessSpec spec;
-        //spec.maximumBlockSize = samplesPerBlock;
-        lastSampleRate = sampleRate;
-        //spec.sampleRate = lastSampleRate;
-        //spec.numChannels = outputChannels;
-        
-        //juce::dsp::ProcessSpec spec;
-    
-        //lowPassFilter.prepare(spec);
-        //lowPassFilter.reset();
     }
     
 }
@@ -156,14 +138,6 @@ bool SubtractiveSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 }
 #endif
 
-/*void SubtractiveSynthAudioProcessor::updateFilter()
-{
-    auto& freq = *apvts.getRawParameterValue("CUTOFF");
-    auto& res = *apvts.getRawParameterValue("RESONANCE");
-    
-    *lowPassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, freq, res);
-}
-*/
 void SubtractiveSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -192,15 +166,21 @@ void SubtractiveSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
                 auto& freq = *apvts.getRawParameterValue("CUTOFF");
                 auto& res = *apvts.getRawParameterValue("RESONANCE");
                 
-               // updateFilter();
+                // Filter Adsr
+                auto& fAttack = *apvts.getRawParameterValue ("FILTERATTACK");
+                auto& fDecay = *apvts.getRawParameterValue ("FILTERDECAY");
+                auto& fSustain = *apvts.getRawParameterValue ("FILTERSUSTAIN");
+                auto& fRelease = *apvts.getRawParameterValue ("FILTERRELEASE");
+                
+                // Filter
+                auto& filterType = *apvts.getRawParameterValue ("FILTERTYPE");
+                auto& cutoff = *apvts.getRawParameterValue ("FILTERFREQ");
+                auto& resonance = *apvts.getRawParameterValue ("FILTERRES");
                            
                 // Update voice
                 voice->getOscillator().setWaveType (oscWaveChoice);
                 voice->getAdsr().update (attack.load(), decay.load(), sustain.load(), release.load());
-                voice->getFilter().update(lastSampleRate, freq.load(), res.load());
-                //juce::dsp::AudioBlock <float> block (buffer);
-                
-                //lowPassFilter.process(juce::dsp::ProcessContextReplacing<float> (block));
+                voice->updateFilter (filterType, cutoff, resonance);
             }
         }
     }
@@ -253,9 +233,17 @@ juce::AudioProcessorValueTreeState::ParameterLayout SubtractiveSynthAudioProcess
     params.push_back (std::make_unique<juce::AudioParameterFloat>("SUSTAIN", "Sustain", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 1.0f));
     params.push_back (std::make_unique<juce::AudioParameterFloat>("RELEASE", "Release", juce::NormalisableRange<float> { 0.1f, 3.0f, 0.1f }, 0.4f));
     
-    //Filter
-    params.push_back (std::make_unique<juce::AudioParameterFloat>("CUTOFF", "Cutoff", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
-    params.push_back (std::make_unique<juce::AudioParameterFloat>("RESONANCE", "Resonance", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
+    // Filter ADSR
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERATTACK", "Filter Attack", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERDECAY", "Filter Decay", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 0.1f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERSUSTAIN", "Filter Sustain", juce::NormalisableRange<float> { 0.1f, 1.0f, 0.1f }, 1.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERRELEASE", "Filter Release", juce::NormalisableRange<float> { 0.1f, 3.0f, 0.1f }, 0.4f));
+    
+    // Filter
+    params.push_back (std::make_unique<juce::AudioParameterChoice>("FILTERTYPE", "Filter Type", juce::StringArray { "Low-Pass", "Band-Pass", "High-Pass" }, 0));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERFREQ", "Filter Freq", juce::NormalisableRange<float> { 20.0f, 20000.0f, 0.1f, 0.6f }, 200.0f));
+    params.push_back (std::make_unique<juce::AudioParameterFloat>("FILTERRES", "Filter Resonance", juce::NormalisableRange<float> { 1.0f, 10.0f, 0.1f }, 1.0f));
+    
     
     return { params.begin(), params.end() };
 }
