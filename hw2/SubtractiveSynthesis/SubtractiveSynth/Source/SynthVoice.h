@@ -10,6 +10,7 @@
 #include "SynthSound.h"
 #include "OscData.h"
 #include "AdsrData.h"
+#include "FIlterData.h"
 
 class SynthVoice : public juce::SynthesiserVoice
 {
@@ -24,7 +25,7 @@ public:
 
     OscData& getOscillator() { return osc; }
     AdsrData& getAdsr() { return adsr; }
-    
+    FilterData& getFilter() { return filter;  }
     
 
 private:
@@ -33,6 +34,7 @@ private:
     OscData osc;
     AdsrData adsr;
     juce::dsp::Gain<float> gain;
+    FilterData filter;
     
     bool isPrepared { false };
     

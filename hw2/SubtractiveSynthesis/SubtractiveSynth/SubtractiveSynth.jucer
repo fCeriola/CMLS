@@ -6,10 +6,12 @@
               pluginFormats="buildStandalone,buildVST3">
   <MAINGROUP id="aIhayW" name="SubtractiveSynth">
     <GROUP id="{91717355-4441-3B0D-5CA5-6ECA69454E30}" name="DATA">
+      <FILE id="LqHByR" name="FIlterData.h" compile="0" resource="0" file="Source/FIlterData.h"/>
+      <FILE id="vZr2hn" name="FIlterData.cpp" compile="1" resource="0" file="Source/FIlterData.cpp"/>
       <FILE id="gKWDnL" name="OscData.h" compile="0" resource="0" file="Source/OscData.h"/>
-      <FILE id="FsepIl" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
-      <FILE id="BuQqOI" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
       <FILE id="xQnIJ0" name="OscData.cpp" compile="1" resource="0" file="Source/OscData.cpp"/>
+      <FILE id="BuQqOI" name="AdsrData.h" compile="0" resource="0" file="Source/AdsrData.h"/>
+      <FILE id="FsepIl" name="AdsrData.cpp" compile="1" resource="0" file="Source/AdsrData.cpp"/>
     </GROUP>
     <GROUP id="{C42CBFC8-BFDE-BB4E-6FE7-3B49E3D0DA42}" name="UI">
       <FILE id="tehjD1" name="AdsrComponent.cpp" compile="1" resource="0"

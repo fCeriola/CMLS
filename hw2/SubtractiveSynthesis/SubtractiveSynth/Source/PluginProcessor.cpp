@@ -19,8 +19,8 @@ SubtractiveSynthAudioProcessor::SubtractiveSynthAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       ), apvts (*this, nullptr, "Parameters", createParams()), 
-                       lowPassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000.0f, 0.1))
+                       ), apvts (*this, nullptr, "Parameters", createParams()) 
+                       //lowPassFilter(juce::dsp::IIR::Coefficients<float>::makeLowPass(44100, 20000.0f, 0.1))
 #endif
 {
     synth.addSound (new SynthSound());
@@ -112,16 +112,16 @@ void SubtractiveSynthAudioProcessor::prepareToPlay (double sampleRate, int sampl
             voice->prepareToPlay (sampleRate, samplesPerBlock, getTotalNumOutputChannels());
         }
         
-        juce::dsp::ProcessSpec spec;
+        //juce::dsp::ProcessSpec spec;
         //spec.maximumBlockSize = samplesPerBlock;
         lastSampleRate = sampleRate;
-        spec.sampleRate = lastSampleRate;
+        //spec.sampleRate = lastSampleRate;
         //spec.numChannels = outputChannels;
         
         //juce::dsp::ProcessSpec spec;
     
-        lowPassFilter.prepare(spec);
-        lowPassFilter.reset();
+        //lowPassFilter.prepare(spec);
+        //lowPassFilter.reset();
     }
     
 }
@@ -156,14 +156,14 @@ bool SubtractiveSynthAudioProcessor::isBusesLayoutSupported (const BusesLayout& 
 }
 #endif
 
-void SubtractiveSynthAudioProcessor::updateFilter()
+/*void SubtractiveSynthAudioProcessor::updateFilter()
 {
     auto& freq = *apvts.getRawParameterValue("CUTOFF");
     auto& res = *apvts.getRawParameterValue("RESONANCE");
     
     *lowPassFilter.state = *juce::dsp::IIR::Coefficients<float>::makeLowPass(lastSampleRate, freq, res);
 }
-
+*/
 void SubtractiveSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
 {
     juce::ScopedNoDenormals noDenormals;
@@ -188,14 +188,19 @@ void SubtractiveSynthAudioProcessor::processBlock (juce::AudioBuffer<float>& buf
                 auto& decay = *apvts.getRawParameterValue ("DECAY");
                 auto& sustain = *apvts.getRawParameterValue ("SUSTAIN");
                 auto& release = *apvts.getRawParameterValue ("RELEASE");
+                
+                auto& freq = *apvts.getRawParameterValue("CUTOFF");
+                auto& res = *apvts.getRawParameterValue("RESONANCE");
+                
+               // updateFilter();
                            
                 // Update voice
                 voice->getOscillator().setWaveType (oscWaveChoice);
                 voice->getAdsr().update (attack.load(), decay.load(), sustain.load(), release.load());
+                voice->getFilter().update(lastSampleRate, freq.load(), res.load());
+                //juce::dsp::AudioBlock <float> block (buffer);
                 
-                juce::dsp::AudioBlock <float> block (buffer);
-                updateFilter();
-                lowPassFilter.process(juce::dsp::ProcessContextReplacing<float> (block));
+                //lowPassFilter.process(juce::dsp::ProcessContextReplacing<float> (block));
             }
         }
     }
