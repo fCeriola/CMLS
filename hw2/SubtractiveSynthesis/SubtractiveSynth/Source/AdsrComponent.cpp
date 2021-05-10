@@ -22,10 +22,11 @@ AdsrComponent::~AdsrComponent()
 {
 }
 
-void AdsrComponent::paint (juce::Graphics& g)
+void AdsrComponent::paint(juce::Graphics& g)
 {
-    auto bounds = getLocalBounds().reduced (5);
+    auto bounds = getLocalBounds().reduced(5);
     auto labelSpace = bounds.removeFromTop (25.0f);
+    
     
     g.fillAll (juce::Colours::black);
     g.setColour (juce::Colours::white);

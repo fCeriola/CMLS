@@ -16,8 +16,8 @@ FilterComponent::FilterComponent (juce::String name, juce::AudioProcessorValueTr
 {
     componentName = name;
     
-    setSliderWithLabel (filterCutoffSlider, cutoffLabel, apvts, cutoffId, filterCutoffAttachment);
-    setSliderWithLabel (filterResSlider, resLabel, apvts, resId, filterResAttachment);
+    setKnobWithLabel (filterCutoffSlider, cutoffLabel, apvts, cutoffId, filterCutoffAttachment);
+    setKnobWithLabel (filterResSlider, resLabel, apvts, resId, filterResAttachment);
 }
 
 FilterComponent::~FilterComponent()
@@ -37,7 +37,8 @@ void FilterComponent::paint (juce::Graphics& g)
 }
 
 void FilterComponent::resized()
-{const auto bounds = getLocalBounds().reduced (10);
+{
+    const auto bounds = getLocalBounds().reduced (10);
     const auto padding = 10;
     const auto sliderWidth = bounds.getWidth() / 4 - padding;
     const auto sliderHeight = bounds.getHeight() - 45;
@@ -56,9 +57,9 @@ void FilterComponent::resized()
 
 using Attachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
-void FilterComponent::setSliderWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment)
+void FilterComponent::setKnobWithLabel (juce::Slider& slider, juce::Label& label, juce::AudioProcessorValueTreeState& apvts, juce::String paramId, std::unique_ptr<Attachment>& attachment)
 {
-    slider.setSliderStyle (juce::Slider::SliderStyle::LinearVertical);
+    slider.setSliderStyle (juce::Slider::SliderStyle::RotaryVerticalDrag);
     slider.setTextBoxStyle (juce::Slider::TextBoxBelow, true, 50, 25);
     addAndMakeVisible (slider);
     

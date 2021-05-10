@@ -14,11 +14,13 @@ SubtractiveSynthAudioProcessorEditor::SubtractiveSynthAudioProcessorEditor (Subt
 , osc (audioProcessor.apvts, "OSC1WAVETYPE")
 , adsr ("Amp Envelope", audioProcessor.apvts, "ATTACK", "DECAY", "SUSTAIN", "RELEASE") 
 , filt ("Filter Control", audioProcessor.apvts, "CUTOFF", "RESONANCE")
+//, gain("Gain", audioProcessor.apvts, "GAIN")
 {
     setSize (620, 500);
     addAndMakeVisible (osc);
     addAndMakeVisible (adsr);
     addAndMakeVisible (filt);
+   // addAndMakeVisible (gain);
 }
 
 SubtractiveSynthAudioProcessorEditor::~SubtractiveSynthAudioProcessorEditor()
@@ -28,7 +30,10 @@ SubtractiveSynthAudioProcessorEditor::~SubtractiveSynthAudioProcessorEditor()
 //==============================================================================
 void SubtractiveSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
+
+    juce::Image background = juce::ImageFileFormat::loadFrom(juce::File("D:/Documenti/Politecnico/CMLS/CMLS_homeworks/CMLS/hw2/SubtractiveSynthesis/SubtractiveSynth/background.png"));
+    g.drawImageAt(background, 0, 0, false);
+  
 }
 
 void SubtractiveSynthAudioProcessorEditor::resized()
@@ -40,4 +45,5 @@ void SubtractiveSynthAudioProcessorEditor::resized()
     osc.setBounds (paddingX, paddingY, 300, 200);
     adsr.setBounds (osc.getRight(), paddingY, 300, 200);
     filt.setBounds (paddingX, paddingY2, 300, 200);
+    //gain.setBounds(paddingX, paddingY, 100, 200);
 }
