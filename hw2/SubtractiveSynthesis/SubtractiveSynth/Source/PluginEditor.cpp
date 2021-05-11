@@ -28,7 +28,7 @@ SubtractiveSynthAudioProcessorEditor::~SubtractiveSynthAudioProcessorEditor()
 //==============================================================================
 void SubtractiveSynthAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    g.fillAll (juce::Colours::black);
+    g.drawImageAt(background, 0, 0, false);
 }
 
 void SubtractiveSynthAudioProcessorEditor::resized()

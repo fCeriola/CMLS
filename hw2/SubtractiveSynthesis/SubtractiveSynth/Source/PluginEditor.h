@@ -30,6 +30,8 @@ private:
     OscComponent osc;
     AdsrComponent adsr;
     FilterComponent filter;
+    
+    juce::Image background = juce::ImageFileFormat::loadFrom(juce::File("./background.png"));
  
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSynthAudioProcessorEditor)
 };
