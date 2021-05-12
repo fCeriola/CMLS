@@ -29,11 +29,7 @@ void OscData::setWaveType (const int choice)
             // Square wave
             initialise ([](float x) { return x < 0.0f ? -1.0f : 1.0f; });
             break;
-        /*
-        case 3;
-            //Triangular wave
-            initialise ([](float x) { return ; });
-        */   
+           
         default:
             jassertfalse;   // You're not supposed to be here!
             break;
