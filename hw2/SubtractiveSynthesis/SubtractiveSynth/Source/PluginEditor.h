@@ -31,7 +31,7 @@ private:
     AdsrComponent adsr;
     FilterComponent filter;
     
-    juce::Image background = juce::ImageFileFormat::loadFrom(juce::File("./background.png"));
+    juce::Image background = juce::ImageFileFormat::loadFrom(juce::File("D:/Documenti/Politecnico/CMLS/CMLS_homeworks/CMLS/hw2/SubtractiveSynthesis/SubtractiveSynth/background.png"));
  
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SubtractiveSynthAudioProcessorEditor)
 };

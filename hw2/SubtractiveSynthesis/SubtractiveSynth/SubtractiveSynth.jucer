@@ -3,7 +3,8 @@
 <JUCERPROJECT id="LyqDg8" name="SubtractiveSynth" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1"
               pluginCharacteristicsValue="pluginIsSynth,pluginWantsMidiIn"
-              pluginFormats="buildStandalone,buildVST3">
+              pluginFormats="buildStandalone,buildVST3" pluginName="MAE -Slice of Moog"
+              pluginManufacturer="CMLS group 13">
   <MAINGROUP id="aIhayW" name="SubtractiveSynth">
     <GROUP id="{91717355-4441-3B0D-5CA5-6ECA69454E30}" name="DATA">
       <FILE id="LqHByR" name="FIlterData.h" compile="0" resource="0" file="Source/FIlterData.h"/>
